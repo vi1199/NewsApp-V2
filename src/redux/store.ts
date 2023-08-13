@@ -7,7 +7,7 @@ import {apiSlice} from '@src/api/apiSlice';
 const store = configureStore({
   reducer: rootReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(apiSlice.middleware, logger),
+    getDefaultMiddleware().concat(apiSlice.middleware),
   devTools: process.env.NODE_ENV !== 'production',
   //enhancers: [monitorReducerEnhancer],
 });

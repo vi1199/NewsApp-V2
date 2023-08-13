@@ -6,8 +6,9 @@ export const getEverythingNews = apiSlice.injectEndpoints({
     getEverything: build.query({
       query: () => ({
         url: END_POINT.everything,
-        params: {country: 'in'},
+        params: {category: 'business', pageSize: 100},
       }),
+      // providesTags: ['Everything']
     }),
   }),
 });

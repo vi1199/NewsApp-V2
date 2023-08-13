@@ -5,12 +5,14 @@ import {
 import {Home} from '../screens/home/Home.screen';
 import {routes} from './screens';
 import {RootStackParamList} from './types';
+import SplashScreen from 'react-native-splash-screen';
 
 const navOptions: NativeStackNavigationOptions = {
   headerShown: false,
 };
 export const Stack = createNativeStackNavigator<RootStackParamList>();
 const HomeNavigator = () => {
+  SplashScreen.hide();
   return (
     <Stack.Navigator screenOptions={navOptions}>
       <Stack.Screen name={routes.HOME} component={Home} />
