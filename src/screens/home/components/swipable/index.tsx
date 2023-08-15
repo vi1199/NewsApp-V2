@@ -1,74 +1,80 @@
-import React, {Component} from 'react';
+import {addPinnedItems} from '@src/reducers/app.slice';
+import {useAppDispatch} from '@src/redux/store.hooks';
+import {Colors} from '@src/ui/colors';
+import React, {Component, useRef} from 'react';
 import {Animated, StyleSheet, Text, View, I18nManager} from 'react-native';
 import {RectButton, Swipeable} from 'react-native-gesture-handler';
+const AnimatedView = Animated.createAnimatedComponent(View);
 
-export default function AppleStyleSwipeableRow({children}) {
-  const renderLeftActions = (progress, dragX) => {
-    const trans = dragX.interpolate({
-      inputRange: [0, 50, 100, 101],
-      outputRange: [-20, 0, 0, 1],
+export default function AppleStyleSwipeableRow({children, deleteRow}) {
+  const swipeRef = useRef(null);
+  const dispatch = useAppDispatch();
+  const renderLeftActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [0, 80],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
     });
+
+    const close = () => {
+      dispatch(addPinnedItems(children.props.item));
+      swipeRef?.current?.close();
+    };
     return (
       <RectButton style={styles.leftAction} onPress={close}>
         <Animated.Text
           style={[
             styles.actionText,
             {
-              transform: [{translateX: trans}],
+              transform: [{scale}],
             },
           ]}>
-          Archive
+          Pin To Top
         </Animated.Text>
       </RectButton>
     );
   };
-  const renderRightAction = (text, color, x, progress) => {
-    const trans = progress.interpolate({
-      inputRange: [0, 1],
-      outputRange: [x, 0],
+
+  const renderRightActions = (
+    progress: Animated.AnimatedInterpolation<number>,
+    dragX: Animated.AnimatedInterpolation<number>,
+  ) => {
+    const scale = dragX.interpolate({
+      inputRange: [-80, 0],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
     });
     const pressHandler = () => {
-      close();
+      console.log('--logged--');
+      swipeRef?.current?.close();
+      deleteRow(children.props.item);
     };
     return (
-      <Animated.View style={{flex: 1, transform: [{translateX: 0}]}}>
-        <RectButton
-          style={[styles.rightAction, {backgroundColor: color}]}
-          onPress={pressHandler}>
-          <Animated.Text
-            style={[
-              styles.actionText,
-              {
-                transform: [{translateX: trans}],
-              },
-            ]}>
-            {text}
-          </Animated.Text>
-        </RectButton>
-      </Animated.View>
+      <RectButton style={[styles.rightAction]} onPress={pressHandler}>
+        <Animated.Text
+          style={[
+            styles.actionText,
+            {
+              transform: [{scale}],
+            },
+          ]}>
+          Delete
+        </Animated.Text>
+      </RectButton>
     );
   };
-  const renderRightActions = progress => (
-    <View
-      style={{
-        width: 192,
-        flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
-      }}>
-      <Animated.View style={{flex: 1, transform: [{translateX: 0}]}}>
-        <RectButton style={[styles.rightAction, {backgroundColor: 'yellow'}]}>
-          <Animated.Text style={[styles.actionText]}>Delete</Animated.Text>
-        </RectButton>
-      </Animated.View>
-    </View>
-  );
 
   const close = () => {};
 
   return (
     <Swipeable
+      key={children.props.item.title}
       friction={2}
-      leftThreshold={30}
-      rightThreshold={40}
+      ref={swipeRef}
+      enableTrackpadTwoFingerGesture
       renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}>
       {children}
@@ -78,9 +84,10 @@ export default function AppleStyleSwipeableRow({children}) {
 
 const styles = StyleSheet.create({
   leftAction: {
-    flex: 1,
-    backgroundColor: '#497AFC',
-    justifyContent: 'center',
+    backgroundColor: Colors.Warning['200'],
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexDirection: I18nManager.isRTL ? 'row' : 'row-reverse',
   },
   actionText: {
     color: 'white',
@@ -88,9 +95,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     padding: 10,
   },
+  actionIcon: {
+    width: 30,
+    marginHorizontal: 10,
+    backgroundColor: 'plum',
+    height: 20,
+  },
   rightAction: {
     alignItems: 'center',
-    flex: 1,
+    backgroundColor: Colors.Warning['200'],
     justifyContent: 'center',
   },
 });

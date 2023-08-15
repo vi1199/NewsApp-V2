@@ -1,15 +1,24 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import {INewsContents} from '@src/types/news';
 
-interface AppState {}
+interface AppState {
+  pinnedItems: INewsContents;
+}
 
-const initialState: AppState = {};
+const initialState: AppState = {
+  pinnedItems: {},
+};
 
 export const appSlice = createSlice({
   name: 'app',
   initialState,
-  reducers: {},
+  reducers: {
+    addPinnedItems: (state, action) => {
+      state.pinnedItems = action.payload;
+    },
+  },
 });
 
-export const {} = appSlice.actions;
+export const {addPinnedItems} = appSlice.actions;
 
 export default appSlice.reducer;

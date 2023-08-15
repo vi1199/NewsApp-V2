@@ -9,5 +9,6 @@ export function Layout({children}: {children: JSX.Element | JSX.Element[]}) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.Secondary['50'],
+    flex: 1,
   },
 });

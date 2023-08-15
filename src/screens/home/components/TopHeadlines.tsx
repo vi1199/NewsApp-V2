@@ -1,36 +1,59 @@
 import {VText, VView} from '@src/ui';
 import {Colors} from '@src/ui/colors';
 import {FlatList} from 'react-native';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
 import AppleStyleSwipeableRow from './swipable';
 import {RectButton} from 'react-native-gesture-handler';
+import {useAppSelector} from '@src/redux/store.hooks';
+import isEmpty from 'lodash/isEmpty';
 
 export const TopHeadlines = props => {
-  const {headlines} = props;
-  console.log('--headines--', headlines);
+  const {headlines, removeRow} = props;
+  const pinnedItems = useAppSelector(state => state.appSlice.pinnedItems);
+  console.log('--headines--\n', headlines);
 
-  const RenderHeadLines = ({item}) => {
+  const RenderHeadLines = ({item, color}) => {
     const {title} = item;
     return (
-      <RectButton style={{paddingVertical: 10, height: 80}}>
+      <RectButton
+        style={{
+          paddingVertical: 10,
+          height: 80,
+          backgroundColor: color ? color : 'white',
+          paddingHorizontal: 12,
+        }}>
         <VText style={{fontSize: 12}}>{title}</VText>
       </RectButton>
     );
   };
   const itemSeparator = () => {
     return (
-      <VView style={{height: 1, backgroundColor: Colors.TertiaryBlue['400']}} />
+      <VView style={{height: 2, backgroundColor: Colors.Secondary['50']}} />
     );
   };
   const SwipeableRow = ({item, index}) => {
     return (
-      <AppleStyleSwipeableRow>
+      <AppleStyleSwipeableRow deleteRow={removeRow}>
         <RenderHeadLines item={item} />
       </AppleStyleSwipeableRow>
     );
   };
+  const renderPinnedItems = () => {
+    if (!isEmpty(pinnedItems)) {
+      return (
+        <VView>
+          <RenderHeadLines
+            item={pinnedItems}
+            color={Colors.TertiaryBlue['300']}
+          />
+        </VView>
+      );
+    }
+    return null;
+  };
+
   return (
-    <VView style={{marginHorizontal: 12}}>
+    <VView style={{}}>
+      {renderPinnedItems()}
       <FlatList
         data={headlines}
         renderItem={SwipeableRow}
