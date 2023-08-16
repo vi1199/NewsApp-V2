@@ -48,7 +48,6 @@ export default function AppleStyleSwipeableRow({children, deleteRow}) {
       extrapolate: 'clamp',
     });
     const pressHandler = () => {
-      console.log('--logged--');
       swipeRef?.current?.close();
       deleteRow(children.props.item);
     };

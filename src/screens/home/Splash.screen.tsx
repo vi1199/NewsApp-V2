@@ -1,16 +1,10 @@
 import {VView} from '@src/ui';
 import {Colors} from '@src/ui/colors';
-import {Image} from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 
 export const LauncherImage = () => {
   return (
-    <VView
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: Colors.Secondary['50'],
-      }}>
+    <VView style={styles.container}>
       <Image
         source={require('../../assets/googlePlay.webp')}
         resizeMode="center"
@@ -22,3 +16,11 @@ export const LauncherImage = () => {
     </VView>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.Secondary['50'],
+  },
+});

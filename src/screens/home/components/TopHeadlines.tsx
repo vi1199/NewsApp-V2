@@ -9,12 +9,12 @@ import isEmpty from 'lodash/isEmpty';
 export const TopHeadlines = props => {
   const {headlines, removeRow} = props;
   const pinnedItems = useAppSelector(state => state.appSlice.pinnedItems);
-  console.log('--headines--\n', headlines);
 
   const RenderHeadLines = ({item, color}) => {
     const {title} = item;
     return (
       <RectButton
+        testID="pinnedItem"
         style={{
           paddingVertical: 10,
           height: 80,

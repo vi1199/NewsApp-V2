@@ -6,7 +6,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import React, {Suspense} from 'react';
 import {LauncherImage} from './screens/home/Splash.screen';
 
-export const App = () => {
+const App = () => {
   return (
     <Provider store={store}>
       <GestureHandlerRootView style={{flex: 1}}>
@@ -19,3 +19,4 @@ export const App = () => {
     </Provider>
   );
 };
+export default App;
